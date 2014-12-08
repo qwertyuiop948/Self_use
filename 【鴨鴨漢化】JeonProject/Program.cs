@@ -61,7 +61,7 @@ namespace JeonProject
             //메인메뉴 - Main Menu
             baseMenu = new Menu("ProjectJ", "ProjectJ", true);
             baseMenu.AddToMainMenu();
-            baseMenu.AddItem(new MenuItem("base_stat", "Status on hud").SetValue(true));
+            baseMenu.AddItem(new MenuItem("base_stat", "顯示在畫面中").SetValue(true));
             //baseMenu.AddItem(new MenuItem("x", "x").SetValue(new Slider(0, 0, 2000)));
             //baseMenu.AddItem(new MenuItem("y", "y").SetValue(new Slider(0, 0, 2000)));
 
@@ -70,7 +70,7 @@ namespace JeonProject
             var menu_tracker = new Menu("監視", "Tracker");
             var menu_j2w = new Menu("跳眼", "Jump2Ward");
             var menu_st = new Menu("堆疊技能的層數", "Stacks");
-            var menu_ins = new Menu("物品與法術", "Item & Spell");
+            var menu_ins = new Menu("物品與招換師技能", "Item & Spell");
 
 
             #region 스마이트 메뉴 - menu for smite
@@ -101,7 +101,7 @@ namespace JeonProject
 
             #region 스택 메뉴 - menu for stacks
             baseMenu.AddSubMenu(menu_st);
-            menu_st.AddItem(new MenuItem("st_bool", "S顯示傷害").SetValue(true));
+            menu_st.AddItem(new MenuItem("st_bool", "顯示傷害").SetValue(true));
             menu_st.AddItem(new MenuItem("st_twitch", "自動E (圖奇)").SetValue(false));
             menu_st.AddItem(new MenuItem("st_kalista", "自動E (克黎思妲)").SetValue(false));
             #endregion
@@ -109,15 +109,15 @@ namespace JeonProject
             #region 아이템사용 메뉴 - menu for UseItem&Spell
             baseMenu.AddSubMenu(menu_ins);
 
-            var menu_jhonya = new Menu("小金人", "zhonya");
+            var menu_jhonya = new Menu("金人", "zhonya");
             menu_ins.AddSubMenu(menu_jhonya);
-            menu_jhonya.AddItem(new MenuItem("useitem_zhonya", "活化小金人").SetValue(true));
-            menu_jhonya.AddItem(new MenuItem("useitem_z_hp", "當HP (%) 時，使用小金人").SetValue(new Slider(15, 0, 100)));
+            menu_jhonya.AddItem(new MenuItem("useitem_zhonya", "活化金人").SetValue(true));
+            menu_jhonya.AddItem(new MenuItem("useitem_z_hp", "當HP (%) 時，使用金人").SetValue(new Slider(15, 0, 100)));
 
-            var menu_spell = new Menu("法術", "Spell");
+            var menu_spell = new Menu("治癒", "Spell");
             menu_ins.AddSubMenu(menu_spell);
-            menu_spell.AddItem(new MenuItem("usespell", "施放法術").SetValue(true));
-            menu_spell.AddItem(new MenuItem("usespell_hp", "當HP (%) 時，施放法術").SetValue(new Slider(10, 0, 100)));
+            menu_spell.AddItem(new MenuItem("usespell", "施放治癒").SetValue(true));
+            menu_spell.AddItem(new MenuItem("usespell_hp", "當HP (%) 時，施放治癒").SetValue(new Slider(10, 0, 100)));
 
             #endregion
 
@@ -368,31 +368,31 @@ namespace JeonProject
                 int i = 0;
                 Color text_color = Color.Red;
 
-                Drawing.DrawText(x, y + (interval * i), Color.Wheat, "Champion : " + Player.BaseSkinName);
+                Drawing.DrawText(x, y + (interval * i), Color.Wheat, "英雄 : " + Player.BaseSkinName);
                 i++; 
-                Drawing.DrawText(x, y + (interval * i), Color.Wheat, "Spells : " + filterspellname(Player.SummonerSpellbook.GetSpell(SpellSlot.Summoner1).Name) + "," +
+                Drawing.DrawText(x, y + (interval * i), Color.Wheat, "招換師技能 : " + filterspellname(Player.SummonerSpellbook.GetSpell(SpellSlot.Summoner1).Name) + "," +
             filterspellname(Player.SummonerSpellbook.GetSpell(SpellSlot.Summoner2).Name));
                 i++;
                 Drawing.DrawText(x, y + (interval * i), (baseMenu.Item("AutoSmite").GetValue<bool>() && smiteSlot != SpellSlot.Unknown) ? Color.FromArgb(0, 255, 0) : Color.Red,
-                    "AutoSmite(" + bool2string(baseMenu.Item("AutoSmite").GetValue<bool>() && smiteSlot != SpellSlot.Unknown) + ")");
+                    "自動重擊(" + bool2string(baseMenu.Item("AutoSmite").GetValue<bool>() && smiteSlot != SpellSlot.Unknown) + ")");
                 i++;
                 Drawing.DrawText(x, y + (interval * i), (baseMenu.Item("AutoIgnite").GetValue<bool>() && igniteSlot != SpellSlot.Unknown) ? Color.FromArgb(0, 255, 0) : Color.Red,
-                    "AutoIgnite(" + bool2string(baseMenu.Item("AutoIgnite").GetValue<bool>() && igniteSlot != SpellSlot.Unknown) + ")");
+                    "自動點燃(" + bool2string(baseMenu.Item("AutoIgnite").GetValue<bool>() && igniteSlot != SpellSlot.Unknown) + ")");
                 i++;
                 Drawing.DrawText(x, y + (interval * i), (baseMenu.Item("j2w_bool").GetValue<bool>() && jumpspell != null) ? Color.FromArgb(0, 255, 0) : Color.Red,
-                    "Jump2Ward(" + bool2string(baseMenu.Item("j2w_bool").GetValue<bool>() && jumpspell != null) + ")");
+                    "跳眼(" + bool2string(baseMenu.Item("j2w_bool").GetValue<bool>() && jumpspell != null) + ")");
                 i++;
                 Drawing.DrawText(x, y + (interval * i), (baseMenu.Item("st_twitch").GetValue<bool>()) ? Color.FromArgb(0, 255, 0) : Color.Red,
-                    "CastTwitch(E)(" + bool2string(baseMenu.Item("st_twitch").GetValue<bool>()) + ")");
+                    "自動施放老鼠的 E(" + bool2string(baseMenu.Item("st_twitch").GetValue<bool>()) + ")");
                 i++;
                 Drawing.DrawText(x, y + (interval * i), (baseMenu.Item("st_kalista").GetValue<bool>()) ? Color.FromArgb(0, 255, 0) : Color.Red,
-                    "CastKalista(E)(" + bool2string(baseMenu.Item("st_kalista").GetValue<bool>()) + ")");
+                    "自動施放克黎思妲的 E(" + bool2string(baseMenu.Item("st_kalista").GetValue<bool>()) + ")");
                 i++;
                 Drawing.DrawText(x, y + (interval * i), (baseMenu.Item("useitem_zhonya").GetValue<bool>()) ? Color.FromArgb(0, 255, 0) : Color.Red,
-                    "CastZhonya(" + bool2string(baseMenu.Item("useitem_zhonya").GetValue<bool>()) + ")");
+                    "施放金人(" + bool2string(baseMenu.Item("useitem_zhonya").GetValue<bool>()) + ")");
                 i++;
                 Drawing.DrawText(x, y + (interval * i), (baseMenu.Item("usespell").GetValue<bool>() && defslot != SpellSlot.Unknown) ? Color.FromArgb(0, 255, 0) : Color.Red,
-                    "SummurSpell(" + bool2string(baseMenu.Item("usespell").GetValue<bool>() && defslot != SpellSlot.Unknown) + ")");
+                    "spell(" + bool2string(baseMenu.Item("usespell").GetValue<bool>() && defslot != SpellSlot.Unknown) + ")");
                 i++;
 
             }
