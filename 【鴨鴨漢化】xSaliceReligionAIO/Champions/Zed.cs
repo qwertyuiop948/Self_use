@@ -47,13 +47,13 @@ namespace xSaliceReligionAIO.Champions
                 menu.AddSubMenu(key);
             }
 
-            var spellMenu = new Menu("技能主選單", "SpellMenu");
+            var spellMenu = new Menu("W/R 技能選項", "SpellMenu");
             {
                 var wMenu = new Menu("W模式", "WMenu");
                 {
-                    wMenu.AddItem(new MenuItem("W_Require_QE", "Require both Q/E to hit on W Harass")).SetValue(true);
+                    wMenu.AddItem(new MenuItem("W_Require_QE", "在騷擾模式中，W 需要 Q/E 都可用時才會施放")).SetValue(true);
                     wMenu.AddItem(new MenuItem("W_Follow_Combo", "允許使用 W 在 Line Combo 模式")).SetValue(false);
-                    wMenu.AddItem(new MenuItem("useW_Health", "使用 W 互換，如果血量低下時").SetValue(new Slider(25)));
+                    wMenu.AddItem(new MenuItem("useW_Health", "使用 W 互換，如果血量低於").SetValue(new Slider(25)));
                     spellMenu.AddSubMenu(wMenu);
                 }
 
@@ -61,10 +61,10 @@ namespace xSaliceReligionAIO.Champions
                 {
                     rMenu.AddItem(new MenuItem("R_Place_line", "R Range behind target in Line").SetValue(new Slider(400, 250, 550)));
                     rMenu.AddItem(new MenuItem("R_Back", "使用 R 互換，如果敵人死亡").SetValue(true));
-                    rMenu.AddItem(new MenuItem("useR_Health", "使用 R 互換，如果血量低下時").SetValue(new Slider(10)));
+                    rMenu.AddItem(new MenuItem("useR_Health", "使用 R 互換，如果血量低於").SetValue(new Slider(10)));
 
                     //evading spells
-                    var dangerous = new Menu("閃避危險技能", "Dodge Dangerous");
+                    var dangerous = new Menu("閃避技能", "Dodge Dangerous");
                     {
                         foreach (var hero in ObjectManager.Get<Obj_AI_Hero>().Where(x => x.IsEnemy))
                         {
@@ -85,7 +85,7 @@ namespace xSaliceReligionAIO.Champions
             var combo = new Menu("接技", "Combo");
             {
                 combo.AddItem(new MenuItem("selected", "專注於選擇目標").SetValue(true));
-                combo.AddItem(new MenuItem("Combo_mode", "接技模式").SetValue(new StringList(new[] { "Normal", "Line Combo (先手 R 並繞背)", "Coax (WQE 先手並與 W 互換接 R)", "Ult no W", "Normal With Ult" })));
+                combo.AddItem(new MenuItem("Combo_mode", "接技模式").SetValue(new StringList(new[] { "正常接技", "Line Combo (先手 R 並繞背)", "Coax (WQE 先手並與 W 互換接 R)", "不使用 W 大招", "含有大招的接技" })));
                 combo.AddItem(new MenuItem("Combo_Switch", "切換模式熱鍵").SetValue(new KeyBind("T".ToCharArray()[0], KeyBindType.Press)));
                 combo.AddItem(new MenuItem("UseQCombo", "使用 Q").SetValue(true));
                 combo.AddItem(new MenuItem("Prioritize_Q", "優先 Q ，而不是 W->Q").SetValue(true));
@@ -109,7 +109,7 @@ namespace xSaliceReligionAIO.Champions
             {
                 farm.AddItem(new MenuItem("UseQFarm", "使用 Q").SetValue(true));
                 farm.AddItem(new MenuItem("UseEFarm", "使用 E").SetValue(true));
-                farm.AddItem(new MenuItem("LaneClear_useE_minHit", "如果是最後一下使用 E").SetValue(new Slider(2, 1, 6)));
+                farm.AddItem(new MenuItem("LaneClear_useE_minHit", "使用 E 技能尾兵數量至少要").SetValue(new Slider(2, 1, 6)));
                 //add to menu
                 menu.AddSubMenu(farm);
             }
@@ -127,10 +127,10 @@ namespace xSaliceReligionAIO.Champions
                 drawMenu.AddItem(new MenuItem("Draw_W", "W 範圍").SetValue(true));
                 drawMenu.AddItem(new MenuItem("Draw_E", "E 範圍").SetValue(true));
                 drawMenu.AddItem(new MenuItem("Draw_R", "R 範圍").SetValue(true));
-                drawMenu.AddItem(new MenuItem("Current_Mode", "當前範圍模式").SetValue(true));
+                drawMenu.AddItem(new MenuItem("Current_Mode", "當前接技模式").SetValue(true));
 
-                MenuItem drawComboDamageMenu = new MenuItem("Draw_ComboDamage", "顯示接技傷害").SetValue(true);
-                MenuItem drawFill = new MenuItem("Draw_Fill", "顯示接技傷害 (含普攻)").SetValue(new Circle(true, Color.FromArgb(90, 255, 169, 4)));
+                MenuItem drawComboDamageMenu = new MenuItem("Draw_ComboDamage", "Draw Combo Damage").SetValue(true);
+                MenuItem drawFill = new MenuItem("Draw_Fill", "Draw Combo Damage Fill").SetValue(new Circle(true, Color.FromArgb(90, 255, 169, 4)));
                 drawMenu.AddItem(drawComboDamageMenu);
                 drawMenu.AddItem(drawFill);
                 DamageIndicator.DamageToUnit = GetComboDamage;
@@ -1091,15 +1091,15 @@ namespace xSaliceReligionAIO.Champions
                 Vector2 wts = Drawing.WorldToScreen(Player.Position);
                 int mode = menu.Item("Combo_mode").GetValue<StringList>().SelectedIndex;
                 if (mode == 0)
-                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "Normal ");
+                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "正常接技 ");
                 else if (mode == 1)
-                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "Line Combo");
+                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "Line Combo (先手 R)");
                 else if (mode == 2)
-                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "Coax");
+                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "Coax (WQE 先手)");
                 else if (mode == 3)
-                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "Ult no W");
+                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "接技中不使用 W");
                 else if (mode == 4)
-                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "Normal With ult");
+                    Drawing.DrawText(wts[0] - 20, wts[1], Color.White, "必定使用 R 的接技");
             }
         }
     }
